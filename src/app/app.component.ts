@@ -1,4 +1,4 @@
-import {Renderer, ViewChild, HostBinding} from '@angular/core';
+import {Renderer, ViewChild, HostBinding, OnInit} from '@angular/core';
 import { Component, HostListener, ElementRef } from '@angular/core';
 
 @Component({
@@ -6,7 +6,7 @@ import { Component, HostListener, ElementRef } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   public static readonly STATE_NEXT_INFOS = "infos";
   public static readonly STATE_NEXT_DIRECTION = "direction";
 
@@ -30,6 +30,13 @@ export class AppComponent {
 
   constructor(private renderer: Renderer) {
 
+  }
+
+  ngOnInit(): void {
+    let savedMap = window.localStorage.getItem("map");
+    if (savedMap) {
+      this.path = JSON.parse(savedMap);
+    }
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -79,8 +86,13 @@ export class AppComponent {
       heightDiff: this.heightDiff,
       previous: lastBlock,
     });
+    this.save();
     this.state = AppComponent.STATE_NEXT_DIRECTION;
     this.setFocus(this.focusInput);
+  }
+
+  save() {
+    window.localStorage.setItem("map", JSON.stringify(this.path));
   }
 }
 
