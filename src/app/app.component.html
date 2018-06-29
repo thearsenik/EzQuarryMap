@@ -1,8 +1,17 @@
 <div #root>
-  <form [hidden]="state !== 'infos'">
-    <input #heightInput [(ngModel)]="height" type="number" name="height" min="0" (keyup.enter)="validHeight()" (blur)="validHeight()"/>
-    <input #heightDiffInput [(ngModel)]="heightDiff" type="number" name="heightDiff" (keyup.enter)="validHeightDiff()" (blur)="validHeightDiff()"/>
-  </form>
+  <div class="header">
+    <div>
+      <form [hidden]="state !== 'infos'">
+        <input #heightInput [(ngModel)]="height" type="number" name="height" min="0" (keyup.enter)="validHeight()" (blur)="validHeight()"/>
+        <input #heightDiffInput [(ngModel)]="heightDiff" type="number" name="heightDiff" (keyup.enter)="validHeightDiff()" (blur)="validHeightDiff()"/>
+      </form>
+    </div> 
+    <div>
+      <textarea #copyTA style="opacity: 0" [ngModel]="stringifiedMap"></textarea>
+      <button (click)="resetData()">Reset</button>
+      <button (click)="copyData()">Data</button>
+    </div>
+  </div>
   <input #focusInput style="opacity: 0;"/>
 
   <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">

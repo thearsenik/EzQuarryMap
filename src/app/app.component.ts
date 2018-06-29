@@ -13,6 +13,7 @@ export class AppComponent implements OnInit{
   state = AppComponent.STATE_NEXT_DIRECTION;
 
   @ViewChild('focusInput') focusInput:ElementRef;
+  @ViewChild('copyTA') copyTextArea:ElementRef;
 
   // Form
   height:number = 0;
@@ -22,11 +23,12 @@ export class AppComponent implements OnInit{
   @ViewChild('heightInput') heightInput:ElementRef;
 
   // Draw
-  path = [];
+  path:Array<Block> = [];
   currentBlockId = 0;
   currentBlockX = 0;
   currentBlockY = 5;
   blockSize = 10;
+  stringifiedMap = "";
 
   constructor(private renderer: Renderer) {
 
@@ -36,6 +38,10 @@ export class AppComponent implements OnInit{
     let savedMap = window.localStorage.getItem("map");
     if (savedMap) {
       this.path = JSON.parse(savedMap);
+      let lastBlock = this.path[this.path.length - 1];
+      this.currentBlockX = lastBlock.x;
+      this.currentBlockY = lastBlock.y;
+      this.currentBlockId = lastBlock.id;
     }
   }
 
@@ -53,11 +59,12 @@ export class AppComponent implements OnInit{
         this.currentBlockX++;
         knownKey = true;
       } else if(event.keyCode === KEY_CODE.BOTTOM_ARROW) {
-        this.currentBlockY--;
+        this.currentBlockY++;
         knownKey = true;
       }
   
       if (knownKey) {
+        this.currentBlockId++;
         this.state = AppComponent.STATE_NEXT_INFOS;
         this.setFocus(this.heightInput);
       }
@@ -80,11 +87,11 @@ export class AppComponent implements OnInit{
       lastBlock = this.path[this.path.length - 1];
     }
     this.path.push({
+      id: this.currentBlockId,
       x: this.currentBlockX,
       y: this.currentBlockY,
       height: this.height,
-      heightDiff: this.heightDiff,
-      previous: lastBlock,
+      heightDiff: this.heightDiff
     });
     this.save();
     this.state = AppComponent.STATE_NEXT_DIRECTION;
@@ -92,7 +99,17 @@ export class AppComponent implements OnInit{
   }
 
   save() {
-    window.localStorage.setItem("map", JSON.stringify(this.path));
+    this.stringifiedMap = JSON.stringify(this.path);
+    window.localStorage.setItem("map", this.stringifiedMap);
+  }
+
+  resetData() {
+    this.path = [];
+  }
+
+  copyData() {
+    this.copyTextArea.nativeElement.select();
+    document.execCommand( 'copy' );
   }
 }
 
@@ -104,9 +121,9 @@ export enum KEY_CODE {
 }
 
 export interface Block {
+  id: number;
   x: number;
   y: number;
   height:number;
   heightDiff: number;
-  previous?: Block;
 }
