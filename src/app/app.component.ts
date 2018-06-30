@@ -94,6 +94,7 @@ export class AppComponent implements OnInit{
       heightDiff: this.heightDiff
     });
     this.save();
+    this.heightDiff = 0; // reset height diff for a faster input
     this.state = AppComponent.STATE_NEXT_DIRECTION;
     this.setFocus(this.focusInput);
   }
