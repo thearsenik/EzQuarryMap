@@ -1,21 +1,61 @@
-<div #root>
+<div #root id="main">
   <div class="header">
     <div>
       <form [hidden]="state !== 'infos'">
         <input #heightInput [(ngModel)]="height" type="number" name="height" min="0" (keyup.enter)="validHeight()" (blur)="validHeight()"/>
-        <input #heightDiffInput [(ngModel)]="heightDiff" type="number" name="heightDiff" (keyup.enter)="validHeightDiff()" (blur)="validHeightDiff()"/>
+        <input #depthInput [(ngModel)]="depth" type="number" name="depth" (keyup.enter)="validDepth()" (blur)="validDepth()"/>
       </form>
     </div> 
-    <div>
+    <div class="commands">
       <textarea #copyTA style="opacity: 0" [ngModel]="stringifiedMap"></textarea>
+      <table>
+        <tr>
+          <td></td>
+          <td (click)="arrow('top')">▲</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td (click)="arrow('left')">◀</td>
+          <td></td>
+          <td (click)="arrow('right')">▶</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td (click)="arrow('bottom')">▼</td>
+          <td></td>
+        </tr>
+      </table>
+      <button (click)="deleteLastBlock()">Delete block</button>
       <button (click)="resetData()">Reset</button>
       <button (click)="copyData()">Data</button>
     </div>
   </div>
   <input #focusInput style="opacity: 0;"/>
-
-  <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg">
+  <div id="map">
+    <!-- TODO FIXME: Height should be fluid -->
+  <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" style="height: 500px;">
     <rect *ngFor="let rect of path" [attr.x]="rect.x * blockSize" [attr.y]="rect.y * blockSize"
-      [attr.width]="blockSize" [attr.height]="blockSize" style="fill:#848484;stroke-width:3;stroke:#ddd" />
+      [attr.width]="blockSize" [attr.height]="blockSize" style="fill:#848484;stroke-width:3;stroke:#ddd;" (click)="setLastBlock(rect)" 
+      [hidden]="rect !== lastBlock" />
+    
+      <!-- lastBlock should be displayed on the top -->
+    <rect *ngIf="lastBlock" [attr.x]="lastBlock.x * blockSize" [attr.y]="lastBlock.y * blockSize"
+    [attr.width]="blockSize" [attr.height]="blockSize" style="fill:#848484;stroke-width:3;stroke:#f00;" ></rect>
   </svg>
+</div>
+
+  <div class="last-block-infos">
+      <div>
+        <label>Id:</label>
+        <span>{{lastBlock?.id}}</span>
+      </div>
+      <div>
+        <label>Height:</label>
+        <span>{{lastBlock?.height}}</span>
+      </div>
+      <div>
+        <label>Depth:</label>
+        <span>{{lastBlock?.depth}}</span>
+      </div>
+  </div>
 <div>

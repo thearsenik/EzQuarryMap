@@ -17,9 +17,9 @@ export class AppComponent implements OnInit{
 
   // Form
   height:number = 0;
-  heightDiff:number = 0;
+  depth:number = 10;
   
-  @ViewChild('heightDiffInput') heightDiffInput:ElementRef;
+  @ViewChild('depthInput') depthInput:ElementRef;
   @ViewChild('heightInput') heightInput:ElementRef;
 
   // Draw
@@ -29,6 +29,7 @@ export class AppComponent implements OnInit{
   currentBlockY = 5;
   blockSize = 10;
   stringifiedMap = "";
+  lastBlock:Block = null;
 
   constructor(private renderer: Renderer) {
 
@@ -42,6 +43,7 @@ export class AppComponent implements OnInit{
       this.currentBlockX = lastBlock.x;
       this.currentBlockY = lastBlock.y;
       this.currentBlockId = lastBlock.id;
+      this.lastBlock = lastBlock;
     }
   }
 
@@ -64,9 +66,7 @@ export class AppComponent implements OnInit{
       }
   
       if (knownKey) {
-        this.currentBlockId++;
-        this.state = AppComponent.STATE_NEXT_INFOS;
-        this.setFocus(this.heightInput);
+        this.showStateInputs();
       }
     }
   }
@@ -78,23 +78,19 @@ export class AppComponent implements OnInit{
   }
 
   validHeight() {
-    this.setFocus(this.heightDiffInput);
+    this.setFocus(this.depthInput);
   }
 
-  validHeightDiff() {
-    let lastBlock = null;
-    if (this.path.length > 0) {
-      lastBlock = this.path[this.path.length - 1];
-    }
+  validDepth() {
     this.path.push({
       id: this.currentBlockId,
       x: this.currentBlockX,
       y: this.currentBlockY,
       height: this.height,
-      heightDiff: this.heightDiff
+      depth: this.depth
     });
+    this.lastBlock = this.path[this.path.length - 1];
     this.save();
-    this.heightDiff = 0; // reset height diff for a faster input
     this.state = AppComponent.STATE_NEXT_DIRECTION;
     this.setFocus(this.focusInput);
   }
@@ -106,11 +102,51 @@ export class AppComponent implements OnInit{
 
   resetData() {
     this.path = [];
+    this.currentBlockId = 0;
+    this.currentBlockX = 0;
+    this.currentBlockY = 5;
+    this.blockSize = 10;
+    this.lastBlock = null;
   }
 
   copyData() {
     this.copyTextArea.nativeElement.select();
     document.execCommand( 'copy' );
+  }
+
+  arrow(direction:String) {
+    if (direction === 'left') {
+      this.currentBlockX--;
+    } else if(direction === 'top') {
+      this.currentBlockY--;
+    } else if(direction === 'right') {
+      this.currentBlockX++;
+    } else if(direction === 'bottom') {
+      this.currentBlockY++;
+    }
+    
+    this.showStateInputs();
+  }
+
+  showStateInputs() {
+    this.currentBlockId++;
+    this.state = AppComponent.STATE_NEXT_INFOS;
+    this.setFocus(this.heightInput);
+  }
+
+  deleteLastBlock() {
+    this.path.pop();
+    if (this.path.length > 0) {
+      this.setLastBlock(this.path[this.path.length -1]);
+    } else {
+      this.lastBlock = null;
+    }
+  }
+
+  setLastBlock(block: Block) {
+    this.lastBlock = block;
+    this.currentBlockX = this.lastBlock.x;
+    this.currentBlockY = this.lastBlock.y;
   }
 }
 
@@ -126,5 +162,5 @@ export interface Block {
   x: number;
   y: number;
   height:number;
-  heightDiff: number;
+  depth: number;
 }

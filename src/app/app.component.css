@@ -3,3 +3,47 @@
     flex-direction: row;
     justify-content: space-between
 }
+
+.commands {
+    display: flex;
+    flex-direction: row;
+    align-items: center
+}
+
+.commands table {
+    color: white;
+}
+
+.commands td {
+    cursor: pointer;
+}
+
+.commands *{
+    margin: 5px;
+}
+
+.last-block-infos {
+    display: flex;
+    flex-direction: row;
+    color: white;
+}
+
+.last-block-infos * {
+    margin: 5px;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+#map {
+    flex: 1;
+    min-height: 0;
+}
+
+#map > svg {
+    height: 100%;
+    width: 100%;
+}
