@@ -134,8 +134,11 @@ export class AppComponent implements OnInit{
     this.setFocus(this.heightInput);
   }
 
-  deleteLastBlock() {
-    this.path.pop();
+  deleteBlock() {
+    let blockIndex = this.path.findIndex(elt => elt === this.lastBlock);
+    if (blockIndex >= 0) {
+      this.path.splice(blockIndex, 1);
+    }
     if (this.path.length > 0) {
       this.setLastBlock(this.path[this.path.length -1]);
     } else {
