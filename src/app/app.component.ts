@@ -1,5 +1,6 @@
 import {Renderer, ViewChild, HostBinding, OnInit} from '@angular/core';
 import { Component, HostListener, ElementRef } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,7 @@ export class AppComponent implements OnInit{
   stringifiedMap = "";
   lastBlock:Block = null;
 
-  constructor(private renderer: Renderer) {
+  constructor(private renderer: Renderer, private toastr: ToastrService) {
 
   }
 
@@ -112,6 +113,7 @@ export class AppComponent implements OnInit{
   copyData() {
     this.copyTextArea.nativeElement.select();
     document.execCommand( 'copy' );
+    this.toastr.success('Data is copied in your clipboard. Paste it in your text editor!', 'Copied');
   }
 
   arrow(direction:String) {
