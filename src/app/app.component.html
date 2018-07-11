@@ -2,8 +2,16 @@
   <div class="header">
     <div>
       <form [hidden]="state !== 'infos'">
-        <input #heightInput [(ngModel)]="height" type="number" name="height" min="0" (keyup.enter)="validHeight()" (blur)="validHeight()"/>
-        <input #depthInput [(ngModel)]="depth" type="number" name="depth" (keyup.enter)="validDepth()" (blur)="validDepth()"/>
+        <div class="form-block">
+          <div>
+            <label for="height">Height:</label>
+            <input #heightInput [(ngModel)]="height" type="number" name="height" min="0" (keyup.enter)="validHeight()" (blur)="validHeight()"/>
+          </div>
+          <div>
+            <label for="depth">Depth:</label>
+            <input #depthInput [(ngModel)]="depth" type="number" name="depth" (keyup.enter)="validDepth()" (blur)="validDepth()"/>
+          </div>
+        </div>
       </form>
     </div> 
     <div class="commands">
